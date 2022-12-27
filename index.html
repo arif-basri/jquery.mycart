@@ -97,6 +97,29 @@
       });
     }
 
+    function getParameterByName(name, url = window.location.href) {
+      name = name.replace(/[\[\]]/g, '\\$&');
+      var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)'),
+              results = regex.exec(url);
+      if (!results) return null;
+      if (!results[2]) return '';
+      return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+
+    var cartId = getParameterByName('x');
+    function getCartItems(cartId){
+      if (cartId == null || localStorage["__mycart"].length>0) {
+        return localStorage["__mycart"];
+      } else {
+        return ([
+          {id: 1, name: 'product 1', summary: 'summary 1', price: 10, quantity: 1, image: 'images/img_1.png'},
+          {id: 2, name: 'product 2', summary: 'summary 2', price: 20, quantity: 2, image: 'images/img_2.png'},
+          {id: 3, name: 'product 3', summary: 'summary 3', price: 30, quantity: 1, image: 'images/img_3.png'}
+        ]);
+      }
+    }
+
+
     $('.my-cart-btn').myCart({
       currencySymbol: '$',
       classCartIcon: 'my-cart-icon',
@@ -107,11 +130,7 @@
       affixCartIcon: true,
       showCheckoutModal: true,
       numberOfDecimals: 2,
-      cartItems: [
-        {id: 1, name: 'product 1', summary: 'summary 1', price: 10, quantity: 1, image: 'images/img_1.png'},
-        {id: 2, name: 'product 2', summary: 'summary 2', price: 20, quantity: 2, image: 'images/img_2.png'},
-        {id: 3, name: 'product 3', summary: 'summary 3', price: 30, quantity: 1, image: 'images/img_3.png'}
-      ],
+      cartItems: getCartItems(cartId),
       clickOnAddToCart: function($addTocart){
         goToCartIcon($addTocart);
       },
